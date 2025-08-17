@@ -1,0 +1,10 @@
+.env
+.env.prod
+
+# Database
+db.sqlite3
+*.sqlite3
+
+# Celery
+celerybeat-schedule
+celerybeat.pid

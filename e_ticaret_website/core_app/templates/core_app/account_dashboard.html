@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Hesabım{% endblock title %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+
+        <div class="col-md-4 col-lg-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Hesap Yönetimi</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{% url 'core_app:account_dashboard' %}" class="list-group-item list-group-item-action">
+                        Hesap Özeti
+                    </a>
+                    <a href="{% url 'core_app:profile_edit' %}" class="list-group-item list-group-item-action">
+                        Profili Düzenle
+                    </a>
+                    <a href="{% url 'core_app:password_change' %}" class="list-group-item list-group-item-action">
+                        Şifre Değiştir
+                    </a>
+                    <a href="{% url 'orders:order_list' %}" class="list-group-item list-group-item-action active"> 
+                        Siparişlerim
+                    </a>
+                    <a href="{% url 'core_app:logout' %}" class="list-group-item list-group-item-action text-danger">
+                        Çıkış Yap
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8 col-lg-9">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h2 class="mb-4">Hesap Özeti</h2>
+                    
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <p><strong>Ad Soyad:</strong></p>
+                            <p class="text-muted">{{ user.get_full_name|default:user.username }}</p>
+
+                            <p><strong>Kullanıcı Adı:</strong></p>
+                            <p class="text-muted">{{ user.username }}</p>
+                            
+                            <p><strong>E-posta Adresi:</strong></p>
+                            <p class="text-muted">{{ user.email }}</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p><strong>Telefon Numarası:</strong></p>
+                            <p class="text-muted">{{ profile.phone_number|default:"-" }}</p>
+
+                            <p><strong>Şehir:</strong></p>
+                            <p class="text-muted">{{ profile.location|default:"-" }}</p>
+
+                            <p><strong>Doğum Tarihi:</strong></p>
+                            <p class="text-muted">{{ profile.birth_date|date:"d F Y"|default:"-" }}</p>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <a href="{% url 'core_app:profile_edit' %}" class="btn btn-primary">Bilgileri Düzenle</a>
+                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock content %}

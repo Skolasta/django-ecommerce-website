@@ -1,0 +1,321 @@
+{% extends "base.html" %}
+
+{% block title %}Kullanım Şartları - Cartify{% endblock title %}
+
+{% block content %}
+    {# Header Section #}
+    <div class="bg-light py-5 mb-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="display-4 fw-bold mb-3">
+                        <i class="fas fa-file-contract text-info me-3"></i>
+                        Kullanım Şartları
+                    </h1>
+                    <p class="lead text-muted">
+                        Sitemizi kullanırken uymanız gereken kurallar ve şartlar
+                    </p>
+                    <div class="mt-3">
+                        <span class="badge bg-info fs-6 px-3 py-2">
+                            <i class="fas fa-calendar-alt me-2"></i>
+                            Son Güncelleme: 13 Ağustos 2025
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Main Content #}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                {# Important Notice #}
+                <div class="alert alert-info border-0 rounded-3 p-4 mb-5" role="alert">
+                    <div class="d-flex align-items-center">
+                        <div class="alert-icon me-3">
+                            <i class="fas fa-info-circle text-info" style="font-size: 2rem;"></i>
+                        </div>
+                        <div>
+                            <h5 class="alert-heading fw-bold mb-2">
+                                <i class="fas fa-laptop-code me-2"></i>
+                                Portföy Projesi Bildirimi
+                            </h5>
+                            <p class="mb-0">
+                                Bu site <strong>portföy projesi</strong> olarak geliştirilmiştir. 
+                                Gerçek bir e-ticaret sitesi değildir. Tüm ürünler ve işlemler simülasyondur.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {# Terms Sections #}
+                <div class="row">
+                    <div class="col-12">
+                        {# Section 1 #}
+                        <div class="terms-section mb-5">
+                            <div class="section-header d-flex align-items-center mb-4">
+                                <div class="section-icon me-3">
+                                    <i class="fas fa-user-shield text-primary" style="font-size: 2rem;"></i>
+                                </div>
+                                <div>
+                                    <h3 class="fw-bold mb-1">1. Hesap Sorumlulukları</h3>
+                                    <p class="text-muted mb-0">Kullanıcı hesabınızla ilgili sorumluluklarınız</p>
+                                </div>
+                            </div>
+                            <div class="section-content bg-light rounded-3 p-4">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="responsibility-item mb-3">
+                                            <h6 class="fw-bold text-success">
+                                                <i class="fas fa-check-circle me-2"></i>
+                                                Yapmanız Gerekenler
+                                            </h6>
+                                            <ul class="list-unstyled ms-3">
+                                                <li class="mb-2"><i class="fas fa-arrow-right text-primary me-2"></i>Güçlü şifre kullanın</li>
+                                                <li class="mb-2"><i class="fas fa-arrow-right text-primary me-2"></i>Hesap bilgilerinizi güncel tutun</li>
+                                                <li class="mb-2"><i class="fas fa-arrow-right text-primary me-2"></i>Test verilerini kullanın</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="responsibility-item mb-3">
+                                            <h6 class="fw-bold text-danger">
+                                                <i class="fas fa-times-circle me-2"></i>
+                                                Yapmamanız Gerekenler
+                                            </h6>
+                                            <ul class="list-unstyled ms-3">
+                                                <li class="mb-2"><i class="fas fa-arrow-right text-danger me-2"></i>Gerçek kişisel bilgiler kullanmayın</li>
+                                                <li class="mb-2"><i class="fas fa-arrow-right text-danger me-2"></i>Başka sitelerdeki şifrelerinizi kullanmayın</li>
+                                                <li class="mb-2"><i class="fas fa-arrow-right text-danger me-2"></i>Hesabınızı başkalarıyla paylaşmayın</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# Section 2 #}
+                        <div class="terms-section mb-5">
+                            <div class="section-header d-flex align-items-center mb-4">
+                                <div class="section-icon me-3">
+                                    <i class="fas fa-box-open text-warning" style="font-size: 2rem;"></i>
+                                </div>
+                                <div>
+                                    <h3 class="fw-bold mb-1">2. Ürün ve Hizmet Bilgileri</h3>
+                                    <p class="text-muted mb-0">Sitedeki ürünler ve fiyatlar hakkında</p>
+                                </div>
+                            </div>
+                            <div class="section-content bg-light rounded-3 p-4">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="info-card text-center p-3 bg-white rounded-3">
+                                            <i class="fas fa-database text-info mb-2" style="font-size: 2rem;"></i>
+                                            <h6 class="fw-bold">Test Verileri</h6>
+                                            <small class="text-muted">DummyJSON API'den çekilen örnek ürünler</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="info-card text-center p-3 bg-white rounded-3">
+                                            <i class="fas fa-ban text-danger mb-2" style="font-size: 2rem;"></i>
+                                            <h6 class="fw-bold">Satılık Değil</h6>
+                                            <small class="text-muted">Ürünler gerçek değildir, satın alınamaz</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="info-card text-center p-3 bg-white rounded-3">
+                                            <i class="fas fa-calculator text-warning mb-2" style="font-size: 2rem;"></i>
+                                            <h6 class="fw-bold">Simülasyon Fiyatları</h6>
+                                            <small class="text-muted">Fiyatlar gerçekliği yansıtmaz</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# Section 3 #}
+                        <div class="terms-section mb-5">
+                            <div class="section-header d-flex align-items-center mb-4">
+                                <div class="section-icon me-3">
+                                    <i class="fas fa-exclamation-triangle text-danger" style="font-size: 2rem;"></i>
+                                </div>
+                                <div>
+                                    <h3 class="fw-bold mb-1">3. Yasaklı Aktiviteler</h3>
+                                    <p class="text-muted mb-0">Sitede yapılması yasak olan davranışlar</p>
+                                </div>
+                            </div>
+                            <div class="section-content bg-light rounded-3 p-4">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="prohibited-item d-flex align-items-center p-3 bg-white rounded-3">
+                                            <i class="fas fa-bomb text-danger me-3" style="font-size: 1.5rem;"></i>
+                                            <div>
+                                                <h6 class="fw-bold mb-1">Sistem Saldırıları</h6>
+                                                <small class="text-muted">DDoS, brute force vb. saldırılar</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="prohibited-item d-flex align-items-center p-3 bg-white rounded-3">
+                                            <i class="fas fa-bug text-warning me-3" style="font-size: 1.5rem;"></i>
+                                            <div>
+                                                <h6 class="fw-bold mb-1">Güvenlik Açığı Sömürüsü</h6>
+                                                <small class="text-muted">Zaafiyetleri kötüye kullanma</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="prohibited-item d-flex align-items-center p-3 bg-white rounded-3">
+                                            <i class="fas fa-spam text-info me-3" style="font-size: 1.5rem;"></i>
+                                            <div>
+                                                <h6 class="fw-bold mb-1">Spam ve Kötüye Kullanım</h6>
+                                                <small class="text-muted">Aşırı istek gönderme</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="prohibited-item d-flex align-items-center p-3 bg-white rounded-3">
+                                            <i class="fas fa-user-times text-secondary me-3" style="font-size: 1.5rem;"></i>
+                                            <div>
+                                                <h6 class="fw-bold mb-1">Diğer Kullanıcıları Rahatsız Etme</h6>
+                                                <small class="text-muted">Deneyimi olumsuz etkileme</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# Section 4 #}
+                        <div class="terms-section mb-5">
+                            <div class="section-header d-flex align-items-center mb-4">
+                                <div class="section-icon me-3">
+                                    <i class="fas fa-balance-scale text-success" style="font-size: 2rem;"></i>
+                                </div>
+                                <div>
+                                    <h3 class="fw-bold mb-1">4. Sorumluluk Reddi</h3>
+                                    <p class="text-muted mb-0">Yasal sorumluluklar ve sınırlamalar</p>
+                                </div>
+                            </div>
+                            <div class="section-content bg-light rounded-3 p-4">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="disclaimer-item mb-4">
+                                            <h6 class="fw-bold text-warning">
+                                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                                Veri Güvenliği
+                                            </h6>
+                                            <p class="small text-muted mb-0">
+                                                Bu bir test ortamıdır. Veri kaybı veya güvenlik ihlallerinden 
+                                                proje sahibi sorumlu tutulamaz.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="disclaimer-item mb-4">
+                                            <h6 class="fw-bold text-info">
+                                                <i class="fas fa-tools me-2"></i>
+                                                Sistem Kesintileri
+                                            </h6>
+                                            <p class="small text-muted mb-0">
+                                                Site bakım, güncelleme veya teknik sorunlar nedeniyle 
+                                                geçici olarak erişilemez olabilir.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="disclaimer-item mb-4">
+                                            <h6 class="fw-bold text-danger">
+                                                <i class="fas fa-ban me-2"></i>
+                                                Ticari Sorumluluk
+                                            </h6>
+                                            <p class="small text-muted mb-0">
+                                                Bu site ticari amaçlı değildir. Herhangi bir ticari 
+                                                işlem gerçekleşmez.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="disclaimer-item mb-4">
+                                            <h6 class="fw-bold text-secondary">
+                                                <i class="fas fa-code me-2"></i>
+                                                Portföy Projesi
+                                            </h6>
+                                            <p class="small text-muted mb-0">
+                                                Bu site sadece teknik yetenekleri sergilemek 
+                                                amacıyla oluşturulmuştur.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# Acceptance Section #}
+                        <div class="acceptance-section text-center p-5 bg-gradient rounded-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <div class="text-white">
+                                <h3 class="fw-bold mb-3">
+                                    <i class="fas fa-handshake me-2"></i>
+                                    Şartları Kabul Ediyorum
+                                </h3>
+                                <p class="mb-4">
+                                    Bu siteyi kullanarak yukarıdaki tüm şart ve koşulları 
+                                    okuduğunuzu ve kabul ettiğinizi beyan edersiniz.
+                                </p>
+                                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+                                    <a href="{% url 'core_app:home' %}" class="btn btn-light btn-lg px-4 py-3 rounded-pill">
+                                        <i class="fas fa-home me-2"></i>Ana Sayfaya Dön
+                                    </a>
+                                    <a href="{% url 'core_app:privacy_policy' %}" class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill">
+                                        <i class="fas fa-shield-alt me-2"></i>Gizlilik Politikası
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Custom Styles #}
+    <style>
+        .terms-section {
+            transition: transform 0.3s ease;
+        }
+        
+        .info-card, .prohibited-item, .disclaimer-item {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .prohibited-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .section-content {
+            border-left: 4px solid #17a2b8;
+        }
+        
+        .bg-gradient {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bg-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="white" opacity="0.1"/><circle cx="80" cy="80" r="2" fill="white" opacity="0.1"/></svg>');
+            opacity: 0.3;
+        }
+    </style>
+{% endblock content %}

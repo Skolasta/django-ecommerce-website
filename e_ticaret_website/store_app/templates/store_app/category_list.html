@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Kategoriler - Cartify{% endblock %}
+
+{% block content %}
+    {# Header Section #}
+    <div class="bg-light py-5 mb-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="display-4 fw-bold mb-3">
+                        <i class="fas fa-th-large text-primary me-3"></i>
+                        Kategoriler
+                    </h1>
+                    <p class="lead text-muted">
+                        İstediğiniz kategoriye göz atın ve aradığınız ürünleri kolayca bulun
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Categories Grid #}
+    <div class="container">
+        <div class="row g-4">
+            {% for category in categories %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="category-card card h-100 border-0 shadow-sm rounded-3 overflow-hidden position-relative">
+                        {# Category Background #}
+                        <div class="category-bg position-relative" style="height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                                <i class="fas fa-boxes text-white" style="font-size: 4rem; opacity: 0.3;"></i>
+                            </div>
+                            <div class="position-absolute bottom-0 start-0 p-4 text-white">
+                                <h4 class="fw-bold mb-0">{{ category.display_name|default:category.name }}</h4>
+                            </div>
+                        </div>
+
+                        {# Category Info #}
+                        <div class="card-body p-4">
+                            <p class="text-muted mb-3">
+                                Bu kategorideki ürünleri keşfedin
+                            </p>
+                            <div class="d-grid">
+                                <a href="{% url 'store_app:products_by_category' category.slug %}" 
+                                   class="btn btn-primary rounded-pill py-2">
+                                    <i class="fas fa-arrow-right me-2"></i>Ürünleri Görüntüle
+                                </a>
+                            </div>
+                        </div>
+
+                        {# Hover Effect #}
+                        <div class="category-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" 
+                             style="background: rgba(102, 126, 234, 0.9); opacity: 0; transition: opacity 0.3s ease;">
+                            <div class="text-center text-white">
+                                <i class="fas fa-eye mb-3" style="font-size: 3rem;"></i>
+                                <h5 class="fw-bold">Kategoriye Git</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <i class="fas fa-folder-open text-muted" style="font-size: 5rem;"></i>
+                        <h4 class="mt-3 text-muted">Henüz kategori bulunmuyor</h4>
+                        <p class="text-muted">Yakında yeni kategoriler eklenecek!</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {# Back to Home Button #}
+        <div class="text-center mt-5">
+            <a href="{% url 'core_app:home' %}" class="btn btn-outline-secondary btn-lg px-5 py-3 rounded-pill">
+                <i class="fas fa-home me-2"></i>Ana Sayfaya Dön
+            </a>
+        </div>
+    </div>
+
+    {# Custom Styles #}
+    <style>
+        .category-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+        }
+        
+        .category-card:hover .category-overlay {
+            opacity: 1 !important;
+        }
+        
+        .category-bg {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .category-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+        
+        .category-card:hover .category-bg::before {
+            transform: translateX(100%);
+        }
+    </style>
+{% endblock %}

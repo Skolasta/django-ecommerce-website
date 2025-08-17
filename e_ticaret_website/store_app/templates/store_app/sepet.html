@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load currency_filters %}
+
+{% block title %}Alışveriş Sepetim{% endblock title %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4">Alışveriş Sepetim</h1>
+
+    {# Sepette ürün olup olmadığını kontrol ediyoruz #}
+    {% if cart_items %}
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col" class="ps-4">Ürün</th>
+                                    <th scope="col">Fiyat</th>
+                                    <th scope="col" class="text-center">Adet</th>
+                                    <th scope="col" class="text-end">Toplam</th>
+                                    <th scope="col" class="text-end pe-4"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {# View'den gelen her bir sepet öğesi için döngü #}
+                                {% for item in cart_items %}
+                                    <tr>
+                                        <td class="ps-4">
+                                            <div class="d-flex align-items-center">
+                                                <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" style="width: 60px; height: 60px; object-fit: contain;" class="me-3 rounded">
+                                                <div>
+                                                    <a href="#" class="text-dark text-decoration-none fw-bold">{{ item.product.name }}</a>
+                                                    <small class="d-block text-muted">{{ item.product.category.name }}</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{{ item.product.price|tl_format }}</td>
+                                        <td class="text-center">{{ item.quantity }}</td>
+                                        <td class="text-end fw-bold">{{ item.total_price|tl_format }}</td>
+                                        <td class="text-end pe-4">
+                                            {# Ürünü sepetten kaldırmak için bir link/buton #}
+                                            <a href="#" class="btn btn-sm btn-outline-danger" title="Sepetten Kaldır">
+                                                <i class="bi bi-trash"></i> X
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">Sipariş Özeti</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                Ara Toplam
+                                <span>{{ cart.get_total_price }} TL</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                Kargo
+                                <span>Ücretsiz</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                                <div>
+                                    <strong>Toplam Tutar</strong>
+                                </div>
+                                <span><strong>{{ cart.get_total_price }} TL</strong></span>
+                            </li>
+                        </ul>
+                        <div class="d-grid">
+                            <a href="#" class="btn btn-primary btn-lg">Ödemeye Geç</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        {# Eğer sepette hiç ürün yoksa bu mesajı göster #}
+        <div class="text-center p-5 border rounded shadow-sm">
+            <h3>Sepetiniz şu an boş.</h3>
+            <p class="text-muted">Hemen alışverişe başlayarak harika ürünleri keşfedin!</p>
+            <a href="{% url 'store_app:product_list' %}" class="btn btn-primary mt-3">Alışverişe Başla</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock content %}

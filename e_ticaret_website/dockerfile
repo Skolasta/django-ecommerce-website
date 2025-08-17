@@ -1,0 +1,66 @@
+# Adım 1: Stabil ve daha küçük boyutlu bir Python baz imajı seçin.
+# "slim" versiyonları daha az yer kaplar ve genellikle tercih edilir.
+FROM python:3.11-slim-bullseye
+
+# Adım 2: Konteyner içindeki ortam değişkenlerini ayarlayın. Bu iyi bir pratiktir.
+# PYTHONDONTWRITEBYTECODE: Python'un .pyc dosyaları oluşturmasını engeller.
+# PYTHONUNBUFFERED: Logların doğrudan terminale yazılmasını sağlar.
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Adım 3: Konteyner içindeki çalışma dizinini belirleyin.
+# Bu komuttan sonraki tüm işlemler bu klasörde gerçekleşir.
+WORKDIR /app/
+
+# Adım 4: Önce sadece kütüphane gereksinim dosyasını kopyalayın ve kurun.
+# Docker'ın katmanlı önbellekleme (layer caching) özelliğinden faydalanırız.
+# Kodunuzda değişiklik yapsanız bile, requirements.txt değişmediği sürece
+# bu adımı tekrar çalıştırmaz ve build işlemi saniyeler sürer.
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Adım 5: Proje dosyalarının tamamını çalışma dizinine kopyalayın.
+# "." (birinci nokta) kaynak, yani Dockerfile'ın bulunduğu yerdeki her şeyi ifade eder.
+# "/app/" (ikinci nokta) ise hedef, yani konteynerdeki çalışma dizinini ifade eder.
+COPY . .
+
+# Adım 6: Startup script oluştur
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Step 1: Choose a stable and smaller Python base image.
+# "slim" versions use less space and are generally preferred.
+FROM python:3.11-slim-bullseye
+
+# Step 2: Set environment variables in the container. This is a good practice.
+# PYTHONDONTWRITEBYTECODE: Prevents Python from writing .pyc files.
+# PYTHONUNBUFFERED: Ensures logs are written directly to the terminal.
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Step 3: Set the working directory inside the container.
+# All subsequent commands will run in this directory.
+WORKDIR /app/
+
+# Step 4: Copy and install only the library requirements file first.
+# This leverages Docker's layer caching feature.
+# Even if you change your code, as long as requirements.txt is unchanged,
+# this step won't be re-run, and the build process will take seconds.
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Step 5: Copy all project files to the working directory.
+# The first "." is the source, i.e., everything in the Dockerfile's location.
+# The "/app/" is the destination, i.e., the working directory in the container.
+COPY . .
+
+# Step 6: Create startup script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Step 7: Set entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
+
+# Step 8: Expose port 8000 by default.
+# This indicates that your application will listen on this port.
+EXPOSE 8000

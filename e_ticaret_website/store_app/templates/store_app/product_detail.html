@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load currency_filters %}
+
+{% block title %}
+    {{ product.name }}
+{% endblock title %}
+
+{% block extra_head %}
+<style>
+    .rating-stars {
+        display: inline-block;
+        font-size: 2rem;
+        cursor: pointer;
+    }
+    .rating-stars .star {
+        color: #e4e5e9;
+        transition: color 0.2s;
+    }
+    .rating-stars .star:hover,
+    .rating-stars .star.selected {
+        color: #ffc107;
+    }
+</style>
+{% endblock extra_head %}
+
+{% block content %}
+<div class="container my-5">
+    
+    <div class="row">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <div class="card border-0 shadow-sm text-center">
+                <img src="{{ product.image_url }}" alt="{{ product.name }}" class="img-fluid rounded p-3" style="max-height: 500px; object-fit: contain;">
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <h1 class="display-5 fw-bold">{{ product.name }}</h1>
+            <a href="{% url 'store_app:products_by_category' product.category.slug %}" class="h5 text-muted text-decoration-none mb-3 d-block">{{ product.category.display_name }}</a>
+            
+            <p class="lead">{{ product.description }}</p>
+
+            <h2 class="my-4">{{ product.price|tl_format }}</h2>
+            
+            <form method="POST" action="{% url 'cart:add_to_cart' %}" class="add-to-cart-form">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+
+                <div class="d-flex align-items-center mb-3">
+                    <strong class="me-3 fs-5">Adet:</strong>
+                    <div class="input-group" style="max-width: 140px;">
+                        <button class="btn btn-outline-secondary" type="button" onclick="this.nextElementSibling.stepDown()">-</button>
+                        <input type="number" name="quantity" class="form-control text-center fw-bold" value="1" min="1" max="10">
+                        <button class="btn btn-outline-secondary" type="button" onclick="this.previousElementSibling.stepUp()">+</button>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary btn-lg" type="submit">
+                    <i class="bi bi-cart-plus"></i> Sepete Ekle
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <div class="row">
+        <div class="col-lg-7">
+            <h3 class="mb-4">Müşteri Yorumları ({{ comments.count }})</h3>
+            
+            {% for comment in comments %}
+                <div class="d-flex mb-4">
+                    <div class="flex-shrink-0">
+                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <span class="fw-bold">{{ comment.user.username|first|upper }}</span>
+                        </div>
+                    </div>
+                    <div class="ms-3 flex-grow-1">
+                        <h5 class="fw-bold mb-1">{{ comment.user.username }}</h5>
+                        <div>
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= comment.rating %}
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                {% else %}
+                                    <i class="bi bi-star text-warning"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <small class="text-muted">{{ comment.created_at|date:"d F Y, H:i" }}</small>
+                        <p class="mt-2">{{ comment.comment|linebreaksbr }}</p>
+                    </div>
+                </div>
+                {% if not forloop.last %}<hr class="ms-5">{% endif %}
+            {% empty %}
+                <div class="alert alert-secondary" role="alert">
+                    Bu ürün için henüz yorum yapılmamış. İlk yorumu sen yap!
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0 p-3 sticky-top" style="top: 20px;">
+                <div class="card-body">
+                    <h3 class="mb-4">Yorum Ekle</h3>
+                    {% if user.is_authenticated %}
+                        <form method="post" class="review-form">
+                            {% csrf_token %}
+                            {{ form.rating.as_hidden }}
+                            <div class="mb-3">
+                                <label class="form-label">Puanınız</label>
+                                <div class="rating-stars">
+                                    <span class="star" data-value="1"><i class="bi bi-star"></i></span>
+                                    <span class="star" data-value="2"><i class="bi bi-star"></i></span>
+                                    <span class="star" data-value="3"><i class="bi bi-star"></i></span>
+                                    <span class="star" data-value="4"><i class="bi bi-star"></i></span>
+                                    <span class="star" data-value="5"><i class="bi bi-star"></i></span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_comment" class="form-label">Yorumunuz</label>
+                                {{ form.comment|add_class:"form-control"|attr:"rows:4" }}
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Yorumu Gönder</button>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="alert alert-info" role="alert">
+                            Yorum yapabilmek için lütfen <a href="{% url 'core_app:login' %}?next={{ request.path }}" class="alert-link">giriş yapın</a>.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block extra_script %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const stars = document.querySelectorAll('.rating-stars .star');
+    const ratingInput = document.querySelector('input[name="rating"]');
+
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            const value = this.dataset.value;
+            ratingInput.value = value;
+            
+            stars.forEach(s => {
+                s.classList.remove('selected');
+                s.innerHTML = '<i class="bi bi-star"></i>';
+            });
+
+            for (let i = 0; i < value; i++) {
+                stars[i].classList.add('selected');
+                stars[i].innerHTML = '<i class="bi bi-star-fill"></i>';
+            }
+        });
+
+        star.addEventListener('mouseover', function() {
+            const value = this.dataset.value;
+            for (let i = 0; i < value; i++) {
+                stars[i].querySelector('i').classList.replace('bi-star', 'bi-star-fill');
+                stars[i].style.color = '#ffc107';
+            }
+        });
+
+        star.addEventListener('mouseout', function() {
+            stars.forEach(s => {
+                if (!s.classList.contains('selected')) {
+                    s.querySelector('i').classList.replace('bi-star-fill', 'bi-star');
+                    s.style.color = '';
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock extra_script %}

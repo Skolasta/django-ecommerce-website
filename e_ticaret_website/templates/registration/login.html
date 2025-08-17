@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Giriş Yap{% endblock title %}
+
+{% block content %}
+
+{# Sayfanın tamamını kaplayan ve içindekileri dikey/yatay ortalayan bir ana konteyner #}
+<div class="container-fluid d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    
+    <div class="col-12 col-md-6 col-lg-4">
+        {# Giriş formunu çevreleyen, gölgeli ve şık çerçeve (card) #}
+        <div class="card shadow-lg border-0">
+            <div class="card-body p-4 p-md-5">
+
+                <h2 class="card-title text-center mb-4">Giriş Yap</h2>
+
+                <form method="post">
+                    {# Django'da form güvenliği için bu satır olmazsa olmaz! #}
+                    {% csrf_token %}
+
+                    {# Genel Hata Mesajları (Örn: "Kullanıcı adı veya şifre hatalı") #}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {# Kullanıcı Adı Alanı - 'form-floating' ile şık bir görünüm #}
+                    <div class="form-floating mb-3">
+                        <input type="text" name="username" class="form-control" id="id_username" placeholder="Kullanıcı Adı" required>
+                        <label for="id_username">Kullanıcı Adı</label>
+                    </div>
+
+                    {# Şifre Alanı #}
+                    <div class="form-floating mb-4">
+                        <input type="password" name="password" class="form-control" id="id_password" placeholder="Şifre" required>
+                        <label for="id_password">Şifre</label>
+                    </div>
+                    
+                    {# Giriş Butonu #}
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">Giriş Yap</button>
+                    </div>
+
+                    <hr class="my-4">
+
+                    {# Ek Linkler #}
+                    <div class="text-center">
+                        <a href="#">Şifremi Unuttum?</a>
+                    </div>
+                </form>
+
+            </div>
+            <div class="card-footer py-3 text-center">
+                <small>Hesabın yok mu? <a href="{% url 'core_app:signup' %}">Hemen Kaydol</a></small>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock content %}

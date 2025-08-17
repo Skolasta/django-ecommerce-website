@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # Django Web Uygulaması
+  web:
+    build: .
+    ports:
+      - "${WEB_PORT:-8000}:8000"    # Environment'a göre port
+    volumes:
+      - .:/app                      # Development için kod sync
+      - media_files:/app/media      # Media files persist
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DEBUG=${DEBUG:-1}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS:-localhost,127.0.0.1}
+      - DATABASE_URL=postgresql://eticaret:${DB_PASSWORD:-password123}@db:5432/eticaret_db
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key}
+    command: ${WEB_COMMAND:-python manage.py runserver 0.0.0.0:8000}
+
+  # PostgreSQL Database
+  db:
+    image: postgres:13-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=eticaret_db
+      - POSTGRES_USER=eticaret
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-password123}
+    ports:
+      - "5432:5432"            # Database'e dışarıdan erişim için
+
+  # Redis Cache & Session Store
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  # Celery Worker (Background Tasks)
+  celery:
+    build: .
+    command: celery -A e_ticaret_website worker -l info
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://eticaret:${DB_PASSWORD:-password123}@db:5432/eticaret_db
+      - REDIS_URL=redis://redis:6379/0
+
+  # Celery Beat (Scheduled Tasks)
+  celery-beat:
+    build: .
+    command: celery -A e_ticaret_website beat -l info
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://eticaret:${DB_PASSWORD:-password123}@db:5432/eticaret_db
+      - REDIS_URL=redis://redis:6379/0
+
+volumes:
+  postgres_data:
+  redis_data:
+  media_files:

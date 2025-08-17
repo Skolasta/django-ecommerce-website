@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load currency_filters %}
+
+{% block title %}
+    '{{ query }}' için Arama Sonuçları
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">
+        {% if query %}
+            '{{ query }}' için Arama Sonuçları
+        {% else %}
+            Tüm Ürünleri Görüntüle
+        {% endif %}
+    </h1>
+
+    <div class="row">
+        {% if results %}
+            {% for product in results %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card h-100">
+                        <a href="{% url 'store_app:product_detail' product.id %}"> {{product.name }}
+                            <img class="card-img-top" src="{{ product.image_url }}" alt="{{ product.name }}">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{% url 'store_app:product_detail' product.id %}">{{ product.name }}</a>
+                            </h5>
+                            <h5>{{ product.price|tl_format }}</h5>
+                            <p class="card-text">{{ product.description|truncatewords:15 }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            {# Eğer hiç sonuç bulunamazsa #}
+            <div class="col-12">
+                <p>Aradığınız kriterlere uygun ürün bulunamadı.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}

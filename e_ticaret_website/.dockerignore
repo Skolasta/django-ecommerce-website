@@ -1,0 +1,25 @@
+# .env dosyasındaki hassas bilgileri imaja dahil etme
+.env
+.env.*
+
+# Docker ile ilgili dosyaları imaja dahil etme
+Dockerfile
+.dockerignore
+
+# Git versiyon kontrol dosyalarını dahil etme
+.git
+.gitignore
+
+# Sanal ortam klasörünü dahil etme (çok büyük ve gereksiz)
+venv/
+.venv/
+
+# VS Code ayar klasörünü dahil etme
+.vscode/
+
+# Python'un oluşturduğu cache dosyalarını dahil etme
+__pycache__/
+*.pyc
+
+# Geliştirme ortamındaki veritabanını dahil etme
+db.sqlite3

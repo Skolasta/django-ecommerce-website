@@ -1,0 +1,357 @@
+{% extends 'base.html' %}
+{% load currency_filters %}
+
+{% block title %}
+    {% if category %}
+        {{ category.display_name|default:category.name }} - Cartify
+    {% else %}
+        Tüm Ürünler - Cartify
+    {% endif %}
+{% endblock title %}
+
+{% block content %}
+    {# Header Section #}
+    <div class="bg-light py-5 mb-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    {# Breadcrumb #}
+                    <nav aria-label="breadcrumb" class="mb-3">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="{% url 'core_app:home' %}" class="text-decoration-none">
+                                    <i class="fas fa-home me-1"></i>Ana Sayfa
+                                </a>
+                            </li>
+                            {% if category %}
+                                <li class="breadcrumb-item">
+                                    <a href="{% url 'store_app:category_list' %}" class="text-decoration-none">Kategoriler</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    {{ category.display_name|default:category.name }}
+                                </li>
+                            {% else %}
+                                <li class="breadcrumb-item active" aria-current="page">Tüm Ürünler</li>
+                            {% endif %}
+                        </ol>
+                    </nav>
+
+                    {# Page Title #}
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h1 class="display-5 fw-bold mb-2">
+                                {% if category %}
+                                    <i class="fas fa-tag text-primary me-2"></i>
+                                    {{ category.display_name|default:category.name }}
+                                {% else %}
+                                    <i class="fas fa-th-large text-primary me-2"></i>
+                                    Tüm Ürünler
+                                {% endif %}
+                            </h1>
+                            <p class="text-muted mb-0">
+                                {% if category %}
+                                    {{ category.display_name|default:category.name }} kategorisindeki ürünler
+                                {% else %}
+                                    Mağazamızdaki tüm ürünler
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge bg-primary fs-6 px-3 py-2">
+                                {{ products|length }} Ürün
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Products Section #}
+    <div class="container">
+        <div class="row g-4">
+            {% for product in products %}
+                <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                    <div class="product-card card h-100 border-0 shadow-sm rounded-3 overflow-hidden position-relative">
+                        {# Product Badge #}
+                        <div class="position-absolute top-0 start-0 z-index-3 m-3">
+                            <span class="badge bg-success rounded-pill px-3 py-2">
+                                <i class="fas fa-check me-1"></i>Stokta
+                            </span>
+                        </div>
+
+                        {# Product Image #}
+                        <div class="product-image-container position-relative overflow-hidden">
+                            <a href="{% url 'store_app:product_detail' product.id %}" class="d-block">
+                                <img class="card-img-top product-image" 
+                                     style="height: 280px; object-fit: contain; padding: 20px; transition: transform 0.3s ease;" 
+                                     src="{{ product.image_url }}" 
+                                     alt="{{ product.name }}"
+                                     onmouseover="this.style.transform='scale(1.05)'"
+                                     onmouseout="this.style.transform='scale(1)'">
+                            </a>
+                            {# Quick View Overlay #}
+                            <div class="product-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" 
+                                 style="background: rgba(0,0,0,0.7); opacity: 0; transition: opacity 0.3s ease;">
+                                <a href="{% url 'store_app:product_detail' product.id %}" class="btn btn-light rounded-pill px-4">
+                                    <i class="fas fa-eye me-2"></i>Hızlı Görüntüle
+                                </a>
+                            </div>
+                        </div>
+
+                        {# Product Info #}
+                        <div class="card-body d-flex flex-column p-4">
+                            <div class="product-category mb-2">
+                                <span class="badge bg-light text-dark rounded-pill px-3 py-1">
+                                    <i class="fas fa-tag me-1"></i>{{ product.category.display_name|default:product.category.name }}
+                                </span>
+                            </div>
+                            
+                            <h5 class="card-title fw-bold mb-3" style="min-height: 3rem; line-height: 1.5;">
+                                <a href="{% url 'store_app:product_detail' product.id %}" 
+                                   class="text-decoration-none text-dark">
+                                    {{ product.name|truncatechars:45 }}
+                                </a>
+                            </h5>
+
+                            <p class="card-text text-muted mb-3 flex-grow-1">
+                                {{ product.description|truncatewords:12 }}
+                            </p>
+
+                            <div class="price-section mt-auto">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="price">
+                                        <span class="h4 fw-bold text-primary mb-0">{{ product.price|tl_format }}</span>
+                                    </div>
+                                    <div class="stock-info">
+                                        <small class="text-success">
+                                            <i class="fas fa-check-circle me-1"></i>Stokta
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# Product Actions #}
+                        <div class="card-footer bg-transparent border-0 p-4 pt-0 position-relative" style="z-index: 10;">
+                            <div class="d-grid gap-2">
+                                <form method="POST" action="{% url 'cart:add_to_cart' %}" class="add-to-cart-form">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                                    <button class="btn btn-primary w-100 rounded-pill py-2 fw-bold add-to-cart-btn position-relative" 
+                                            type="submit" style="z-index: 11;">
+                                        <i class="fas fa-shopping-cart me-2"></i>
+                                        <span class="btn-text">Sepete Ekle</span>
+                                        <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                                    </button>
+                                </form>
+                                
+                                <a href="{% url 'store_app:product_detail' product.id %}" 
+                                   class="btn btn-outline-secondary w-100 rounded-pill py-2 position-relative" 
+                                   style="z-index: 11;">
+                                    <i class="fas fa-info-circle me-2"></i>Detayları Gör
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <i class="fas fa-box-open text-muted" style="font-size: 5rem;"></i>
+                        <h4 class="mt-3 text-muted">
+                            {% if category %}
+                                Bu kategoride ürün bulunmuyor
+                            {% else %}
+                                Henüz ürün bulunmuyor
+                            {% endif %}
+                        </h4>
+                        <p class="text-muted">Yakında yeni ürünler eklenecek!</p>
+                        <a href="{% url 'core_app:home' %}" class="btn btn-primary rounded-pill px-4 py-2 mt-3">
+                            <i class="fas fa-home me-2"></i>Ana Sayfaya Dön
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {# Navigation Buttons #}
+        {% if products %}
+        <div class="text-center mt-5">
+            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+                <a href="{% url 'core_app:home' %}" class="btn btn-outline-secondary btn-lg px-4 py-3 rounded-pill">
+                    <i class="fas fa-home me-2"></i>Ana Sayfaya Dön
+                </a>
+                {% if category %}
+                <a href="{% url 'store_app:category_list' %}" class="btn btn-outline-primary btn-lg px-4 py-3 rounded-pill">
+                    <i class="fas fa-list me-2"></i>Tüm Kategoriler
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    {# Custom Styles #}
+    <style>
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+        }
+        
+        .product-card:hover .product-overlay {
+            opacity: 1 !important;
+        }
+        
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: "›";
+            font-weight: bold;
+        }
+
+        .btn-success-temp {
+            background-color: #28a745 !important;
+            border-color: #28a745 !important;
+        }
+    </style>
+
+    {# AJAX Cart Script #}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // CSRF token'ı al
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            // Tüm sepete ekle formlarını dinle
+            document.querySelectorAll('.add-to-cart-form').forEach(function(form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const button = form.querySelector('.add-to-cart-btn');
+                    const btnText = button.querySelector('.btn-text');
+                    const spinner = button.querySelector('.spinner-border');
+                    const productId = form.querySelector('input[name="product_id"]').value;
+                    
+                    // Button durumunu değiştir
+                    button.disabled = true;
+                    btnText.textContent = 'Ekleniyor...';
+                    spinner.classList.remove('d-none');
+                    
+                    // AJAX isteği
+                    fetch('{% url "cart:add_to_cart" %}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        body: 'product_id=' + productId + '&quantity=1'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            // Başarılı mesaj göster
+                            btnText.textContent = 'Eklendi!';
+                            button.classList.remove('btn-primary');
+                            button.classList.add('btn-success', 'btn-success-temp');
+                            
+                            // Sepet sayısını güncelle (eğer navbar'da varsa)
+                            const cartBadge = document.querySelector('.cart-badge');
+                            if (cartBadge) {
+                                cartBadge.textContent = data.cart_item_count;
+                            }
+                            
+                            // Toast notification göster
+                            showToast('Ürün sepete eklendi!', 'success');
+                            
+                            // 2 saniye sonra button'u eski haline döndür
+                            setTimeout(function() {
+                                button.disabled = false;
+                                btnText.textContent = 'Sepete Ekle';
+                                button.classList.remove('btn-success', 'btn-success-temp');
+                                button.classList.add('btn-primary');
+                                spinner.classList.add('d-none');
+                            }, 2000);
+                        } else {
+                            throw new Error('Sepete ekleme başarısız');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        btnText.textContent = 'Hata!';
+                        button.classList.remove('btn-primary');
+                        button.classList.add('btn-danger');
+                        
+                        showToast('Sepete ekleme başarısız!', 'error');
+                        
+                        setTimeout(function() {
+                            button.disabled = false;
+                            btnText.textContent = 'Sepete Ekle';
+                            button.classList.remove('btn-danger');
+                            button.classList.add('btn-primary');
+                            spinner.classList.add('d-none');
+                        }, 2000);
+                    });
+                });
+            });
+
+            // Toast notification fonksiyonu
+            function showToast(message, type) {
+                // Toast container oluştur (eğer yoksa)
+                let toastContainer = document.querySelector('.toast-container');
+                if (!toastContainer) {
+                    toastContainer = document.createElement('div');
+                    toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
+                    toastContainer.style.zIndex = '9999';
+                    document.body.appendChild(toastContainer);
+                }
+
+                // Toast elementi oluştur
+                const toastId = 'toast-' + Date.now();
+                const bgClass = type === 'success' ? 'bg-success' : 'bg-danger';
+                const icon = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+                
+                const toastHTML = `
+                    <div id="${toastId}" class="toast align-items-center text-white ${bgClass} border-0" role="alert">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                <i class="${icon} me-2"></i>${message}
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                        </div>
+                    </div>
+                `;
+                
+                toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+                
+                // Toast'ı göster
+                const toastElement = document.getElementById(toastId);
+                const toast = new bootstrap.Toast(toastElement, {
+                    autohide: true,
+                    delay: 3000
+                });
+                toast.show();
+                
+                // Toast kapandıktan sonra DOM'dan kaldır
+                toastElement.addEventListener('hidden.bs.toast', function() {
+                    toastElement.remove();
+                });
+            }
+        });
+    </script>
+{% endblock content %}

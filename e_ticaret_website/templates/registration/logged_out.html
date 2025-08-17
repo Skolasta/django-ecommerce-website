@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Çıkış Yapıldı{% endblock title %}
+
+{% block content %}
+
+{# Sayfanın tamamını kaplayan ve içindekileri dikey/yatay ortalayan ana konteyner #}
+<div class="container-fluid d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    
+    <div class="col-12 col-md-6 col-lg-4">
+        {# Mesajı çevreleyen, gölgeli ve şık çerçeve (card) #}
+        <div class="card shadow-lg border-0 text-center">
+            <div class="card-body p-4 p-md-5">
+
+                <h3 class="card-title mb-3">Başarıyla Çıkış Yaptınız</h3>
+                <p class="text-muted">Tekrar görüşmek üzere!</p>
+
+                <div class="d-grid gap-2 mt-4">
+                    <a href="{% url 'core_app:login' %}" class="btn btn-primary">Tekrar Giriş Yap</a>
+                    <a href="{% url 'core_app:home' %}" class="btn btn-secondary">Anasayfaya Dön</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock content %}

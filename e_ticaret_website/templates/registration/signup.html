@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Kayıt Ol{% endblock title %}
+
+{% block content %}
+
+<div class="container-fluid d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    
+    <div class="col-12 col-md-8 col-lg-5">
+        <div class="card shadow-lg border-0">
+            <div class="card-body p-4 p-md-5">
+
+                <h2 class="card-title text-center mb-4">Yeni Hesap Oluştur</h2>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {# forms.py'den gelen her alanı dinamik olarak oluştur #}
+                    {% for field in form %}
+                        <div class="form-floating mb-3">
+                            {# Alanın kendisi (input), artık placeholder içeriyor #}
+                            {{ field }}
+                            
+                            {# Alanın etiketi (label) #}
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        </div>
+                        
+                        {# Alana özel hataları göster #}
+                        {% if field.errors %}
+                            <div class="alert alert-danger py-1 mt-1" role="alert">
+                                {% for error in field.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Kayıt Ol</button>
+                    </div>
+
+                </form>
+
+            </div>
+            <div class="card-footer py-3 text-center">
+                <small>Zaten bir hesabın var mı? <a href="{% url 'core_app:login' %}">Giriş Yap</a></small>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock content %}

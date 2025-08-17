@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load currency_filters %}
+
+{% block title %}Ödeme Bilgileri{% endblock title %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4 text-center">Ödeme Bilgileri</h1>
+    
+    <div class="row">
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h4 class="mb-3">Teslimat Adresi</h4>
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                Lütfen formdaki hataları düzeltin.
+                            </div>
+                        {% endif %}
+
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <label for="{{ form.first_name.id_for_label }}" class="form-label">Ad</label>
+                                {{ form.first_name|add_class:"form-control" }}
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label for="{{ form.last_name.id_for_label }}" class="form-label">Soyad</label>
+                                {{ form.last_name|add_class:"form-control" }}
+                            </div>
+
+                            <div class="col-12">
+                                <label for="{{ form.email.id_for_label }}" class="form-label">E-posta Adresi</label>
+                                {{ form.email|add_class:"form-control" }}
+                            </div>
+
+                            <div class="col-12">
+                                <label for="{{ form.shipping_address.id_for_label }}" class="form-label">Tam Adres</label>
+                                {{ form.shipping_address|add_class:"form-control" }}
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+                        
+                        <h4 class="mb-3">Kart Bilgileri</h4>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="card_holder_name" class="form-label">Kart Sahibi Adı</label>
+                                <input type="text" class="form-control" id="card_holder_name" name="card_holder_name" placeholder="Kart üzerindeki isim" required>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="card_number" class="form-label">Kart Numarası</label>
+                                <input type="text" class="form-control" id="card_number" name="card_number" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label for="expire_month" class="form-label">Son Kullanma Ayı</label>
+                                <select class="form-control" id="expire_month" name="expire_month" required>
+                                    <option value="">Ay</option>
+                                    <option value="01">01</option>
+                                    <option value="02">02</option>
+                                    <option value="03">03</option>
+                                    <option value="04">04</option>
+                                    <option value="05">05</option>
+                                    <option value="06">06</option>
+                                    <option value="07">07</option>
+                                    <option value="08">08</option>
+                                    <option value="09">09</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label for="expire_year" class="form-label">Son Kullanma Yılı</label>
+                                <select class="form-control" id="expire_year" name="expire_year" required>
+                                    <option value="">Yıl</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2026">2026</option>
+                                    <option value="2027">2027</option>
+                                    <option value="2028">2028</option>
+                                    <option value="2029">2029</option>
+                                    <option value="2030">2030</option>
+                                    <option value="2031">2031</option>
+                                    <option value="2032">2032</option>
+                                    <option value="2033">2033</option>
+                                    <option value="2034">2034</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label for="cvc" class="form-label">CVC</label>
+                                <input type="text" class="form-control" id="cvc" name="cvc" placeholder="123" maxlength="4" required>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-grid">
+                            <button class="btn btn-primary btn-lg" type="submit">Ödemeye Geç</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light py-3">
+                    <h4 class="mb-0">Sipariş Özeti</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for item in cart_items %}
+                            <li class="list-group-item d-flex justify-content-between lh-sm">
+                                <div>
+                                    <h6 class="my-0">{{ item.product.name }}</h6>
+                                    <small class="text-muted">Adet: {{ item.quantity }}</small>
+                                </div>
+                                <span class="text-muted">{{ item.total_price|tl_format }}</span>
+                            </li>
+                        {% endfor %}
+
+                        <li class="list-group-item d-flex justify-content-between bg-light mt-3">
+                            <span class="fw-bold">Toplam Tutar</span>
+                            <strong>{{ total_cart_price|tl_format }}</strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

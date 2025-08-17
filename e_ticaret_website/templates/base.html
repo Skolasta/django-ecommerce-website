@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <title>{% block title %}Cartify - Modern Alışverişin Adresi{% endblock %}</title>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="{% url 'core_app:home' %}">🛒 Cartify</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url "core_app:home" %}">Anasayfa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'store_app:product_list' %}">Ürünler</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Kategoriler
+                        </a>
+                        <ul class="dropdown-menu">
+                            {% for category in all_categories  %}
+                                <li><a class="dropdown-item" href="{% url 'store_app:products_by_category' category.slug %}">{{ category.display_name }}</a></li>
+                            {% endfor %}
+                            
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'store_app:product_list' %}">Tüm Kategoriler</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "core_app:hakkimizda" %}">Hakkımızda</a>
+                    </li>
+                </ul>
+
+                    <form class="d-flex" method="GET" action="{% url 'store_app:search' %}" role="search">
+                        
+                        <input 
+                            class="form-control me-2" 
+                            type="search" 
+                            name="q"  
+                            placeholder="Ürün Ara..." 
+                            aria-label="Search">
+                            
+                        <button class="btn btn-outline-success" type="submit">Ara</button>
+
+                    </form>
+
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person-fill"></i> Merhaba, {{ user.username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{% url "core_app:account_dashboard" %}">Profilim</a></li>
+                                <li><a class="dropdown-item" href="{% url "orders:order_list" %}">Siparişlerim</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <form action="{% url "core_app:logout" %}" method="post">
+                                    {% csrf_token %}
+                                    <li><button type="submit" class="dropdown-item">Çıkış Yap</button></li>
+                                </form>
+
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url "core_app:login" %}">Giriş Yap</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url "core_app:signup" %}">Kayıt Ol</a>
+                        </li>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "cart:view_cart" %}">
+                            <i class="bi bi-cart-fill"></i> Sepet
+                            <span class="badge rounded-pill bg-danger" id="cart-item-count">
+                                {{ cart_item_count|default:0 }}
+                                </span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container my-4">
+        {% block content %}
+            <div class="alert alert-info" role="alert">
+                Bu alan, diğer sayfaların içeriği ile dolacaktır. Şu anda <strong>base.html</strong> şablonunu görüyorsunuz.
+            </div>
+        {% endblock %}
+    </div>
+    <footer class="bg-dark text-white text-center p-4 mt-auto">
+        <div class="container">
+            <p>&copy; {% now "Y" %} Cartify | Tüm Hakları Saklıdır.</p>
+            <p>
+                <a href="{% url "core_app:privacy_policy" %}" class="text-white">Gizlilik Politikası</a> | 
+                <a href="{% url "core_app:terms_of_use" %}" class="text-white">Kullanım Şartları</a>
+            </p>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    {% block extra_script %}{% endblock %}
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    </div>
+    <script>
+    // Sayfa tamamen yüklendiğinde bu kodun çalışmasını bekle
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // --- Toast (Bildirim) göstermek için yardımcı fonksiyon ---
+        function showToast(message, type = 'success') {
+            const toastContainer = document.querySelector('.toast-container');
+            const toastId = 'toast-' + Date.now();
+            const toastHTML = `
+                <div id="${toastId}" class="toast align-items-center text-bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            `;
+            toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        }
+
+
+        // --- AJAX ile Sepete Ekleme Mantığı ---
+        const allForms = document.querySelectorAll('.add-to-cart-form');
+
+        allForms.forEach(form => {
+            form.addEventListener('submit', function(event) {
+                // 1. Formun normal gönderimini (sayfa yenilemeyi) engelle
+                event.preventDefault();
+
+                // 2. Form verilerini ve URL'i al
+                const formData = new FormData(form);
+                const url = form.getAttribute('action');
+                const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                // 3. Arka planda Django'ya POST isteği gönder (fetch)
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        // Bu başlıklar AJAX isteğini ve CSRF token'ını Django'ya bildirir
+                        'X-CSRFToken': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: formData
+                })
+                .then(response => response.json()) // Django'dan gelen cevabı JSON olarak işle
+                .then(data => {
+                    // 4. Django'dan cevap başarıyla geldiğinde
+                    if (data.status === 'success') {
+                        // 5. Navbar'daki sepet sayısını güncelle
+                        const cartCountElement = document.getElementById('cart-item-count');
+                        if (cartCountElement) {
+                            cartCountElement.innerText = data.cart_item_count;
+                        }
+                        // 6. Kullanıcıya bildirim göster
+                        showToast(data.message || 'Ürün sepete eklendi!');
+                    } else {
+                        showToast('Bir hata oluştu.', 'danger');
+                    }
+                })
+                .catch(error => {
+                    console.error('Hata:', error);
+                    showToast('Bir ağ hatası oluştu.', 'danger');
+                });
+            });
+        });
+    });
+</script>
+</body>
+</html>

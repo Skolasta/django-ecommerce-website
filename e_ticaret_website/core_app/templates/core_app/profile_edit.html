@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}Profili Düzenle{% endblock title %}
+
+{% block extra_css %}
+{# Diğer form sayfalarıyla tutarlı bir görünüm için aynı stilleri kullanıyoruz #}
+<style>
+    :root {
+        --primary: #4f46e5;
+        --muted: #6b7280;
+        --border: #d1d5db;
+        --danger: #dc3545;
+    }
+    body { background-color: #f8f9fa; }
+    .auth-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2.5rem 1.5rem;
+    }
+    .auth-card {
+        width: 100%;
+        max-width: 600px; /* Diğer formlardan biraz daha geniş olabilir */
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 2.5rem 2rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    .form-group + .form-group { margin-top: 1.25rem; }
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 0.5rem;
+    }
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        outline: none;
+    }
+    .btn-primary-custom {
+        width: 100%;
+        padding: 0.875rem;
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 1.5rem;
+        transition: background 0.2s;
+    }
+    .btn-primary-custom:hover { background: #4338ca; }
+    .text-center { text-align: center; }
+    .text-danger { color: var(--danger); font-size: 0.875rem; margin-top: 0.25rem; }
+    .mb-4 { margin-bottom: 1.5rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <h2 class="text-center mb-4">Profil Bilgilerini Düzenle</h2>
+
+        {# Django messages framework'ü ile başarı mesajlarını göstermek için #}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {# TEK BİR FORM ETİKETİ KULLANIYORUZ #}
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            <fieldset>
+                <legend class="fs-5 border-bottom pb-2 mb-3">Hesap Bilgileri</legend>
+                
+                {# UserUpdateForm'dan gelen alanlar #}
+                {% for field in user_form %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {{ field|add_class:"form-control" }}
+                        {% for error in field.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </fieldset>
+
+            <fieldset class="mt-4">
+                <legend class="fs-5 border-bottom pb-2 mb-3">Profil Bilgileri</legend>
+
+                {# UserProfileForm'dan gelen alanlar #}
+                {% for field in profile_form %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {{ field|add_class:"form-control" }}
+                        {% for error in field.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </fieldset>
+            
+            <button type="submit" class="btn-primary-custom">Bilgileri Güncelle</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
