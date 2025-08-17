@@ -273,4 +273,4 @@ Proje Linki: [https://github.com/username/e-ticaret-website](https://github.com/
 
 ---
 
-⭐ Bu projeyi beğendiyseniz yıldız vermeyi unutmayın!
+⭐ Bu projeyi beğendiyseniz yıldız vermeyi unutmayın!# django-ecommerce-website
